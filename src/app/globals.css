@@ -1,26 +1,94 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	--background: #151528;
+	--secondBackground: #131424;
+	--mainColor: #a1a1a1;
+	--activeColor: #4ecdc4;
+	--secondActiveColor: #8678ef;
+	--hoverColor: rgba(113, 138, 219, 0.405);
+	--brandGradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+	--brandGradientHover: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+	--btnShadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+	--yellow: #fbbf24;
+	--orange: #ff7e5f;
+	--green: #22c55e;
+	--blue: #3b82f6;
+	--red: #ef4444;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	:root {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+	}
 }
 
+html {
+	scroll-behavior: smooth;
+}
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	background: var(--background);
+	color: var(--mainColor);
+	font-family: var(--font-inter);
+	overflow-x: hidden;
+}
+h1,
+h2,
+h3 {
+	font-family: var(--font-poppins);
+}
+button {
+	cursor: pointer;
+	font-family: inherit;
+}
+.ai-loader {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.react-flow__edge-textbg {
+	fill: #1e1e1e !important;
+}
+
+.react-flow__edge-text {
+	fill: var(--secondActiveColor) !important;
+	font-weight: 500;
+}
+.ai-loader span {
+	width: 4px;
+	height: 20px;
+	background: #22d3ee;
+	border-radius: 4px;
+
+	box-shadow: 0 0 6px #22d3ee, 0 0 12px #06b6d4;
+
+	transform-origin: center;
+	animation: ai-wave 1.2s infinite ease-in-out;
+}
+
+.ai-loader span:nth-child(2) {
+	animation-delay: 0.2s;
+}
+
+.ai-loader span:nth-child(3) {
+	animation-delay: 0.4s;
+}
+
+@keyframes ai-wave {
+	0%,
+	100% {
+		transform: scaleY(0.6);
+		opacity: 0.6;
+	}
+	50% {
+		transform: scaleY(1.4);
+		opacity: 1;
+	}
 }

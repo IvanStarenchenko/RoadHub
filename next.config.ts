@@ -1,7 +1,16 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+	basePath: '/roadmaps',
+	images: {
+		unoptimized: true,
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'encrypted-tbn0.gstatic.com',
+			},
+		],
+	},
+}
 
-export default nextConfig;
+export default nextConfig
