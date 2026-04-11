@@ -11,7 +11,7 @@ const useRoadmapStore = create<RoadmapState>(set => ({
 	nodes: [
 		{
 			id: '1',
-			type: 'mediaNode', // Это имя мы используем в React Flow nodeTypes
+			type: 'mediaNode',
 			position: { x: 250, y: 5 },
 			data: {
 				name: 'Железный человек',
@@ -20,8 +20,8 @@ const useRoadmapStore = create<RoadmapState>(set => ({
 				poster:
 					'https://image.tmdb.org/t/p/w500/781tY96VvA3vS5qO806n6XvB7Z6.jpg',
 				isSpoiler: false,
-				vpnRequired: false,
-			},
+				vpnRequired: false
+			}
 		},
 		{
 			id: '2',
@@ -35,16 +35,16 @@ const useRoadmapStore = create<RoadmapState>(set => ({
 				poster:
 					'https://image.tmdb.org/t/p/w500/69Sns8o3S6pYp9vO6YclUf6ndpB.jpg',
 				isSpoiler: true,
-				vpnRequired: false,
-			},
-		},
+				vpnRequired: false
+			}
+		}
 	],
 	edges: [
-		{ id: 'e1-2', source: '1', target: '2', animated: true, label: 'приквел' },
+		{ id: 'e1-2', source: '1', target: '2', animated: true, label: 'приквел' }
 	],
 	title: 'Default Title',
 	setRoadmap: (data: RoadmapData) =>
-		set({ nodes: data.nodes, edges: data.edges }),
+		set({ nodes: data.nodes, edges: data.edges })
 }))
 
 export default useRoadmapStore
