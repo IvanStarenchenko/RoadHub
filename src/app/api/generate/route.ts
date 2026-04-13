@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 						data: z.object({
 							name: z.string(),
 							description: z.string(),
-							mediaType: z.enum(['movie', 'series', 'game', 'book']),
+							mediaType: z.enum(['movie', 'tv', 'game', 'book']),
 							poster: z.string().url(),
 							isSpoiler: z.boolean(),
 							vpnRequired: z.boolean(),

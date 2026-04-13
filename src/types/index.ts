@@ -1,6 +1,6 @@
 import { StaticImageData } from 'next/image'
 
-export type MediaType = 'movie' | 'game' | 'book' | 'note'
+export type MediaType = 'movie' | 'game' | 'book' | 'tv'
 
 export interface RoadmapData {
 	id: string

@@ -22,7 +22,7 @@ export const ROADMAP_SYSTEM_PROMPT = `
       "data": { 
         "name": "Название", 
         "description": "Контекстное описание от ИИ", 
-        "mediaType": "movie" | "series" | "game" | "book",
+        "mediaType": "movie" | "tv" | "game" | "book",
         "isSpoiler": boolean,
         "vpnRequired": boolean 
       }
