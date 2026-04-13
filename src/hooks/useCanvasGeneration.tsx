@@ -3,7 +3,6 @@ import { getLayoutedElements } from '@/lib/layout'
 import useRoadmapStore from '@/store/useRoadmapStore'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-
 export function useCanvasGeneration() {
 	const { setRoadmap } = useRoadmapStore()
 	const [isLoading, setIsLoading] = useState(false)
