@@ -1,4 +1,3 @@
-import { StaticImageData } from 'next/image'
 
 export type MediaType = 'movie' | 'game' | 'book' | 'tv'
 
@@ -7,7 +6,7 @@ export interface RoadmapData {
 	title: string
 	nodes: {
 		id: string
-		tmdbId: string
+		tmdbId: string // заменить нужно на универсаньный contentId 
 		type: 'mediaNode'
 		position: { x: number; y: number }
 		data: {
@@ -25,25 +24,4 @@ export interface RoadmapData {
 		target: string
 		label?: string
 	}[]
-}
-export interface TMDBMediaItem {
-	id: number | string
-	title?: string
-	name?: string
-	original_title?: string
-	original_name?: string
-	overview: string
-	poster_path: string | null
-	backdrop_path: string | null | StaticImageData
-	release_date?: string
-	first_air_date?: string
-	genre_ids: number[]
-	popularity: number
-	vote_average: number
-	vote_count: number
-	original_language: string
-	adult: boolean
-	origin_country?: string[]
-
-	media_type: MediaType
 }

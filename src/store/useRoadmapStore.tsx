@@ -1,12 +1,18 @@
-// store/useRoadmapStore.ts
-import { RoadmapData, TMDBMediaItem } from '@/types'
+import { RoadmapData } from '@/types'
+import { IGameDetails } from '@/types/game'
+import { TMDBMediaItem } from '@/types/tmdb'
 
 import { create } from 'zustand'
 interface RoadmapState {
 	nodes: RoadmapData['nodes']
 	edges: RoadmapData['edges']
-	cardDetails: TMDBMediaItem | null
-	setCardDetails: (data: TMDBMediaItem | null) => void
+
+	tmdbDetails: TMDBMediaItem | null
+	gameDetails?: IGameDetails | null
+
+	setTmdbDetails: (data: TMDBMediaItem | null) => void
+	setGameDetails?: (data: IGameDetails | null) => void
+
 	title: string
 	setRoadmap: (data: RoadmapData) => void
 }
@@ -24,8 +30,8 @@ const useRoadmapStore = create<RoadmapState>(set => ({
 				poster:
 					'https://image.tmdb.org/t/p/w500/781tY96VvA3vS5qO806n6XvB7Z6.jpg',
 				isSpoiler: false,
-				vpnRequired: false,
-			},
+				vpnRequired: false
+			}
 		},
 		{
 			id: '2',
@@ -40,20 +46,22 @@ const useRoadmapStore = create<RoadmapState>(set => ({
 				poster:
 					'https://image.tmdb.org/t/p/w500/69Sns8o3S6pYp9vO6YclUf6ndpB.jpg',
 				isSpoiler: true,
-				vpnRequired: false,
-			},
-		},
+				vpnRequired: false
+			}
+		}
 	],
 	edges: [
-		{ id: 'e1-2', source: '1', target: '2', animated: true, label: 'приквел' },
+		{ id: 'e1-2', source: '1', target: '2', animated: true, label: 'приквел' }
 	],
 	title: 'Default Title',
 
-	cardDetails: null,
-	setCardDetails: data => set({ cardDetails: data }),
+	tmdbDetails: null,
+	gameDetails: null,
+	setGameDetails: data => set({ gameDetails: data }),
+	setTmdbDetails: data => set({ tmdbDetails: data }),
 
 	setRoadmap: (data: RoadmapData) =>
-		set({ nodes: data.nodes, edges: data.edges }),
+		set({ nodes: data.nodes, edges: data.edges })
 }))
 
 export default useRoadmapStore

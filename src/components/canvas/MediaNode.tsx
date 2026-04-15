@@ -46,7 +46,7 @@ export function MediaNode({ data }: MediaNodeProps) {
 				</div>
 
 				<div className="mt-1 flex flex-col gap-y-2 overflow-hidden">
-					<h3 className="text-md truncate font-semibold leading-tight text-white">
+					<h3 className="text-md  font-semibold leading-tight text-white">
 						{data.name}
 					</h3>
 
@@ -61,9 +61,7 @@ export function MediaNode({ data }: MediaNodeProps) {
 						{data.mediaType}
 					</span>
 
-					<p className="line-clamp-3 text-[10px] leading-snug text-gray-400">
-						{data.description}
-					</p>
+					<p className=" text-[10px]  text-gray-400">{data.description}</p>
 				</div>
 			</div>
 
