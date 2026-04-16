@@ -10,7 +10,7 @@ import { DetailsCard } from './Details/DetailsCard'
 import { MediaNode } from './MediaNode'
 
 const nodeTypes = {
-	mediaNode: MediaNode
+	mediaNode: MediaNode,
 }
 
 export default function FlowCanvas() {
@@ -24,7 +24,7 @@ export default function FlowCanvas() {
 		isTMDBLoading,
 		generateRoadmap,
 		gameDetails,
-		selectedMedia
+		selectedMedia,
 	} = useGetDetails()
 
 	if (isLoading) {
@@ -32,7 +32,7 @@ export default function FlowCanvas() {
 	}
 	return (
 		<div
-			className="relative"
+			className='relative'
 			style={{ width: '100vw', height: '100vh', position: 'relative' }}
 		>
 			<div
@@ -41,7 +41,7 @@ export default function FlowCanvas() {
 					top: 0,
 					left: 0,
 					width: '100%',
-					zIndex: 10
+					zIndex: 10,
 				}}
 			>
 				<AISearch onSearch={generateRoadmap} />
@@ -60,8 +60,8 @@ export default function FlowCanvas() {
 			</ReactFlow>
 
 			{(tmdbDetails || gameDetails) && (
-				<div className="absolute top-0 right-0 h-full w-full max-w-[33%] z-50 p-4 pointer-events-none">
-					<div className="pointer-events-auto h-full rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+				<div className='absolute top-0 right-0 h-full w-full max-w-[33%] z-50 p-4 pointer-events-none'>
+					<div className='pointer-events-auto h-full rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]'>
 						<DetailsCard
 							selectedType={selectedMedia?.type}
 							isLoading={isGameLoading || isTMDBLoading}

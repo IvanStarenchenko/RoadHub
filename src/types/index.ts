@@ -1,4 +1,3 @@
-
 export type MediaType = 'movie' | 'game' | 'book' | 'tv'
 
 export interface RoadmapData {
@@ -6,10 +5,12 @@ export interface RoadmapData {
 	title: string
 	nodes: {
 		id: string
-		tmdbId: string // заменить нужно на универсаньный contentId 
 		type: 'mediaNode'
 		position: { x: number; y: number }
 		data: {
+			contentSlug: string
+			tmdbId: string
+
 			poster: string
 			name: string
 			description: string

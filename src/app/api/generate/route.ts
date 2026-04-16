@@ -1,8 +1,8 @@
 import { ROADMAP_SYSTEM_PROMPT } from '@/lib/ai-prompt'
 import { generateObject } from 'ai'
-import { z } from 'zod'
 
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { roadmapSchema } from './schema'
 const google = createGoogleGenerativeAI({
 	apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 })
@@ -19,32 +19,7 @@ export async function POST(req: Request) {
 		const result = await generateObject({
 			model: google('gemini-flash-latest'),
 			system: ROADMAP_SYSTEM_PROMPT,
-			schema: z.object({
-				title: z.string(),
-				nodes: z.array(
-					z.object({
-						id: z.string(),
-						type: z.literal('mediaNode'),
-						data: z.object({
-							name: z.string(),
-							description: z.string(),
-							mediaType: z.enum(['movie', 'tv', 'game', 'book']),
-							poster: z.string().url(),
-							isSpoiler: z.boolean(),
-							vpnRequired: z.boolean(),
-							releaseYear: z.number(),
-						}),
-					})
-				),
-				edges: z.array(
-					z.object({
-						id: z.string(),
-						source: z.string(),
-						target: z.string(),
-						label: z.string().optional(),
-					})
-				),
-			}),
+			schema: roadmapSchema,
 			prompt: `Объект исследования: "${prompt}". Выполни глубокий анализ и построй граф согласно системным правилам.`,
 		})
 

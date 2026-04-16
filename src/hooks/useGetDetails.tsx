@@ -12,12 +12,14 @@ export function useGetDetails() {
 	const TMDB_TOKEN = process.env.NEXT_PUBLIC_TMDB_TOKEN
 	const RAWG_TOKEN = process.env.NEXT_PUBLIC_RAWG_API
 	const [selectedMedia, setSelectedMedia] = useState<{
-		id: number
+		id: number | string
+		name?: string
 		type: MediaType
 	} | null>(null)
 	const activeType = selectedMedia?.type
 	const activeTmdbId = selectedMedia?.id
-	const activeGameId = selectedMedia?.id
+	const activeGameSlug = selectedMedia?.name
+	console.log(activeGameSlug)
 	const nodes = useRoadmapStore(state => state.nodes)
 	const edges = useRoadmapStore(state => state.edges)
 	const tmdbDetails = useRoadmapStore(state => state.tmdbDetails)
@@ -32,20 +34,24 @@ export function useGetDetails() {
 		event: React.MouseEvent,
 		node: Node<RoadmapData['nodes'][0]['data']>
 	) => {
-		//setTmdbDetails(null)
 		event.preventDefault()
 		event.stopPropagation()
 
-		const tmdbId = node.id
+		setTmdbDetails(null)
+		if (typeof setGameDetails === 'function') {
+			setGameDetails(null)
+		}
 
-		if (tmdbId && tmdbId !== '0' && setSelectedMedia) {
+		const apiId = node.data.tmdbId
+
+		if (apiId && setSelectedMedia) {
 			setSelectedMedia({
-				id: Number(tmdbId),
-				type: (node.data.mediaType as MediaType) || 'movie'
+				id: isNaN(Number(apiId)) ? apiId : Number(apiId),
+				name: node.data.contentSlug,
+				type: node.data.mediaType,
 			})
 		}
 	}
-
 	const { isLoading: isTMDBLoading } = useQuery({
 		queryKey: ['tmdbDetails', activeType, activeTmdbId],
 
@@ -56,8 +62,8 @@ export function useGetDetails() {
 					method: 'GET',
 					headers: {
 						accept: 'application/json',
-						Authorization: `Bearer ${TMDB_TOKEN}`
-					}
+						Authorization: `Bearer ${TMDB_TOKEN}`,
+					},
 				}
 			)
 
@@ -74,19 +80,19 @@ export function useGetDetails() {
 		enabled: Boolean(
 			(activeType === 'movie' || activeType === 'tv') && activeTmdbId !== 0
 		),
-		retry: false
+		retry: false,
 	})
 	const { isLoading: isGameLoading } = useQuery({
-		queryKey: ['gameDetails', activeType, activeGameId],
+		queryKey: ['gameDetails', activeType, activeGameSlug],
 		queryFn: async () => {
 			const response = await fetch(
-				`https://api.rawg.io/api/games/${activeGameId}?key=${RAWG_TOKEN}`,
+				`https://api.rawg.io/api/games/${activeGameSlug}?key=${RAWG_TOKEN}`,
 				{
 					method: 'GET',
 					headers: {
 						accept: 'application/json',
-						Authorization: `Bearer ${RAWG_TOKEN}`
-					}
+						Authorization: `Bearer ${RAWG_TOKEN}`,
+					},
 				}
 			)
 
@@ -104,9 +110,9 @@ export function useGetDetails() {
 		},
 
 		enabled: Boolean(
-			activeType === 'game' && activeGameId && activeGameId !== 0
+			activeType === 'game' && activeGameSlug && activeGameSlug.length > 0
 		),
-		retry: false
+		retry: false,
 	})
 	return {
 		nodes,
@@ -118,6 +124,6 @@ export function useGetDetails() {
 		isLoading,
 		onNodeClick,
 		selectedMedia,
-		isTMDBLoading
+		isTMDBLoading,
 	}
 }

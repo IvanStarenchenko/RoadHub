@@ -4,14 +4,17 @@ import dagre from 'dagre'
 const dagreGraph = new dagre.graphlib.Graph()
 dagreGraph.setDefaultEdgeLabel(() => ({}))
 
-const nodeWidth = 300
-const nodeHeight = 180
+const nodeWidth = 220
+const nodeHeight = 420
 
 export const getLayoutedElements = (data: RoadmapData) => {
 	const { nodes, edges } = data
 
-	// Настройка графа: TB = Top to Bottom (Сверху вниз)
-	dagreGraph.setGraph({ rankdir: 'TB', nodesep: 70, ranksep: 120 })
+	dagreGraph.setGraph({
+		rankdir: 'TB',
+		nodesep: 100,
+		ranksep: 120,
+	})
 
 	nodes.forEach(node => {
 		dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
