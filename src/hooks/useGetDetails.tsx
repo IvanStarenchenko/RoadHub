@@ -1,6 +1,7 @@
 'use client'
 import useRoadmapStore from '@/store/useRoadmapStore'
 import { MediaType } from '@/types'
+import { OpenLibraryBookDetails } from '@/types/book'
 import { IGameDetails } from '@/types/game'
 import { RoadmapData } from '@/types/index'
 import { useQuery } from '@tanstack/react-query'
@@ -11,22 +12,27 @@ import { useCanvasGeneration } from './useCanvasGeneration'
 export function useGetDetails() {
 	const TMDB_TOKEN = process.env.NEXT_PUBLIC_TMDB_TOKEN
 	const RAWG_TOKEN = process.env.NEXT_PUBLIC_RAWG_API
+
 	const [selectedMedia, setSelectedMedia] = useState<{
 		id: number | string
 		name?: string
 		type: MediaType
 	} | null>(null)
+
 	const activeType = selectedMedia?.type
-	const activeTmdbId = selectedMedia?.id
+	const activeId = selectedMedia?.id
 	const activeGameSlug = selectedMedia?.name
-	console.log(activeGameSlug)
+
 	const nodes = useRoadmapStore(state => state.nodes)
 	const edges = useRoadmapStore(state => state.edges)
+
 	const tmdbDetails = useRoadmapStore(state => state.tmdbDetails)
 	const gameDetails = useRoadmapStore(state => state.gameDetails)
+	const bookDetails = useRoadmapStore(state => state.bookDetails)
 
 	const setTmdbDetails = useRoadmapStore(state => state.setTmdbDetails)
 	const setGameDetails = useRoadmapStore(state => state.setGameDetails)
+	const setBookDetails = useRoadmapStore(state => state.setBookDetails)
 
 	const { generateRoadmap, isLoading } = useCanvasGeneration()
 
@@ -52,12 +58,13 @@ export function useGetDetails() {
 			})
 		}
 	}
+
 	const { isLoading: isTMDBLoading } = useQuery({
-		queryKey: ['tmdbDetails', activeType, activeTmdbId],
+		queryKey: ['tmdbDetails', activeType, activeId],
 
 		queryFn: async () => {
 			const response = await fetch(
-				`https://api.themoviedb.org/3/${activeType}/${activeTmdbId}?language=ru-RU`,
+				`https://api.themoviedb.org/3/${activeType}/${activeId}?language=ru-RU`,
 				{
 					method: 'GET',
 					headers: {
@@ -78,7 +85,7 @@ export function useGetDetails() {
 			return data
 		},
 		enabled: Boolean(
-			(activeType === 'movie' || activeType === 'tv') && activeTmdbId !== 0
+			(activeType === 'movie' || activeType === 'tv') && activeId !== 0
 		),
 		retry: false,
 	})
@@ -114,6 +121,37 @@ export function useGetDetails() {
 		),
 		retry: false,
 	})
+
+	const { isLoading: isBookLoading } = useQuery({
+		queryKey: ['bookDetails', activeId],
+		queryFn: async () => {
+			const response = await fetch(
+				`https://openlibrary.org/works/${activeId}.json`,
+				{
+					method: 'GET',
+					headers: {
+						accept: 'application/json',
+					},
+				}
+			)
+
+			if (!response.ok) {
+				const errorData = await response.json()
+				console.error('OpenLibrary Error:', errorData)
+				throw new Error('Ошибка получения данных от OpenLibrary')
+			}
+
+			const data: OpenLibraryBookDetails = await response.json()
+			if (typeof setBookDetails === 'function') {
+				setBookDetails(data)
+			}
+
+			return data
+		},
+
+		enabled: Boolean(activeType === 'book'),
+		retry: false,
+	})
 	return {
 		nodes,
 		edges,
@@ -121,6 +159,8 @@ export function useGetDetails() {
 		isGameLoading,
 		gameDetails,
 		generateRoadmap,
+		bookDetails,
+		isBookLoading,
 		isLoading,
 		onNodeClick,
 		selectedMedia,

@@ -22,8 +22,10 @@ export default function FlowCanvas() {
 		onNodeClick,
 		isGameLoading,
 		isTMDBLoading,
+		isBookLoading,
 		generateRoadmap,
 		gameDetails,
+		bookDetails,
 		selectedMedia,
 	} = useGetDetails()
 
@@ -59,12 +61,12 @@ export default function FlowCanvas() {
 				<Controls />
 			</ReactFlow>
 
-			{(tmdbDetails || gameDetails) && (
+			{(tmdbDetails || gameDetails || bookDetails) && (
 				<div className='absolute top-0 right-0 h-full w-full max-w-[33%] z-50 p-4 pointer-events-none'>
 					<div className='pointer-events-auto h-full rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]'>
 						<DetailsCard
 							selectedType={selectedMedia?.type}
-							isLoading={isGameLoading || isTMDBLoading}
+							isLoading={isGameLoading || isTMDBLoading || isBookLoading}
 						/>
 					</div>
 				</div>
