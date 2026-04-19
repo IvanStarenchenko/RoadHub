@@ -3,7 +3,7 @@ name: Build and Push to Docker Hub
 on:
   push:
     branches:
-      - main # или master, в зависимости от твоей ветки
+      - main
 
 jobs:
   build-and-push:
@@ -26,7 +26,10 @@ jobs:
         with:
           context: .
           push: true
-          # Используем тег latest и короткий хэш коммита для версионности
+          build-args: |
+            GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+            NEXT_PUBLIC_TMDB_TOKEN=${{ secrets.NEXT_PUBLIC_TMDB_TOKEN }}
+            NEXT_PUBLIC_RAWG_API=${{ secrets.NEXT_PUBLIC_RAWG_API }}
           tags: |
             tymurmustafaiev/roadhub:latest
             tymurmustafaiev/roadhub:${{ github.sha }}

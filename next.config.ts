@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	basePath: '/roadmaps',
+	output: 'standalone',
 	images: {
 		unoptimized: true,
 
