@@ -4,7 +4,6 @@ import { MediaType } from '@/types'
 import Image from 'next/image'
 import { memo } from 'react'
 import { Handle, NodeProps, Position } from 'reactflow'
-
 type MediaNodeData = {
 	contentSlug: string
 	tmdbId: string
@@ -20,7 +19,6 @@ type MediaNodeData = {
 export const MediaNode = memo(
 	({ data, selected }: NodeProps<MediaNodeData>) => {
 		const { tmdbId, name, mediaType, releaseYear } = data
-
 		const getMediaTheme = (type: MediaType) => {
 			switch (type) {
 				case 'movie':

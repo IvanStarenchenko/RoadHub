@@ -7,6 +7,7 @@ import { useGetDetails } from '@/hooks/useGetDetails'
 import { AISearch } from './AISeach'
 import { CanvasLoader } from './CanvasLoader'
 import { DetailsCard } from './Details/DetailsCard'
+import { DetailsLoader } from './Details/DetailsLoader'
 import { MediaNode } from './MediaNode'
 
 const nodeTypes = {
@@ -32,6 +33,7 @@ export default function FlowCanvas() {
 	if (isLoading) {
 		return <CanvasLoader />
 	}
+	const isAnyLoading = isGameLoading || isTMDBLoading || isBookLoading
 	return (
 		<div
 			className='relative'
@@ -62,12 +64,15 @@ export default function FlowCanvas() {
 			</ReactFlow>
 
 			{(tmdbDetails || gameDetails || bookDetails) && (
-				<div className='absolute top-0 right-0 h-full w-full max-w-[33%] z-50 p-4 pointer-events-none'>
-					<div className='pointer-events-auto h-full rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]'>
-						<DetailsCard
-							selectedType={selectedMedia?.type}
-							isLoading={isGameLoading || isTMDBLoading || isBookLoading}
-						/>
+				<div className='absolute top-0 right-0 h-full w-full max-w-[33%] z-50 p-4 pointer-events-none animate-in fade-in slide-in-from-right-5 duration-300'>
+					<div className='pointer-events-auto h-full rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)] bg-[#1a1c23]/95 backdrop-blur-xl flex flex-col'>
+						{isAnyLoading ? (
+							<div className='flex-1 flex items-center justify-center'>
+								<DetailsLoader />
+							</div>
+						) : (
+							<DetailsCard selectedType={selectedMedia?.type} />
+						)}
 					</div>
 				</div>
 			)}

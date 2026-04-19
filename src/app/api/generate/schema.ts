@@ -5,7 +5,6 @@ export const roadmapSchema = z.object({
 	nodes: z.array(
 		z.object({
 			id: z.string().describe("Уникальный ID для ReactFlow (напр. 'node-1')"),
-			// Выносим tmdbId в корень, как в твоем интерфейсе
 
 			type: z.literal('mediaNode'),
 			position: z.object({

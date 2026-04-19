@@ -4,16 +4,14 @@ import useRoadmapStore from '@/store/useRoadmapStore'
 import { MediaType } from '@/types'
 import Link from 'next/link'
 import { BookDetails } from './BookDetail'
-import { DetailsLoader } from './DetailsLoader'
 import { GameDetails } from './GameDetails'
 import { TmdbDetails } from './TmdbDetails'
 
 interface DetailsCardProps {
 	selectedType?: MediaType
-	isLoading?: boolean
 }
 
-export const DetailsCard = ({ selectedType, isLoading }: DetailsCardProps) => {
+export const DetailsCard = ({ selectedType }: DetailsCardProps) => {
 	const {
 		tmdbDetails,
 		gameDetails,
@@ -26,18 +24,9 @@ export const DetailsCard = ({ selectedType, isLoading }: DetailsCardProps) => {
 	const getCurrentData = () => {
 		if (selectedType === 'game') return gameDetails
 		if (selectedType === 'book') return bookDetails
-		return tmdbDetails // movie или tv
+		return tmdbDetails
 	}
-
 	const data = getCurrentData()
-
-	if (isLoading) {
-		return (
-			<div className='h-full bg-[#1a1c23]/90 backdrop-blur-xl'>
-				<DetailsLoader />
-			</div>
-		)
-	}
 
 	if (!data) return null
 

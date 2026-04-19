@@ -1,7 +1,6 @@
 'use client'
 import useRoadmapStore from '@/store/useRoadmapStore'
 import { MediaType } from '@/types'
-import { OpenLibraryBookDetails } from '@/types/book'
 import { IGameDetails } from '@/types/game'
 import { RoadmapData } from '@/types/index'
 import { useQuery } from '@tanstack/react-query'
@@ -21,7 +20,7 @@ export function useGetDetails() {
 
 	const activeType = selectedMedia?.type
 	const activeId = selectedMedia?.id
-	const activeGameSlug = selectedMedia?.name
+	const activeSlug = selectedMedia?.name
 
 	const nodes = useRoadmapStore(state => state.nodes)
 	const edges = useRoadmapStore(state => state.edges)
@@ -90,10 +89,10 @@ export function useGetDetails() {
 		retry: false,
 	})
 	const { isLoading: isGameLoading } = useQuery({
-		queryKey: ['gameDetails', activeType, activeGameSlug],
+		queryKey: ['gameDetails', activeType, activeSlug],
 		queryFn: async () => {
 			const response = await fetch(
-				`https://api.rawg.io/api/games/${activeGameSlug}?key=${RAWG_TOKEN}`,
+				`https://api.rawg.io/api/games/${activeSlug}?key=${RAWG_TOKEN}`,
 				{
 					method: 'GET',
 					headers: {
@@ -117,39 +116,64 @@ export function useGetDetails() {
 		},
 
 		enabled: Boolean(
-			activeType === 'game' && activeGameSlug && activeGameSlug.length > 0
+			activeType === 'game' && activeSlug && activeSlug.length > 0
 		),
 		retry: false,
 	})
 
 	const { isLoading: isBookLoading } = useQuery({
-		queryKey: ['bookDetails', activeId],
+		queryKey: ['bookDetails', activeSlug],
 		queryFn: async () => {
-			const response = await fetch(
-				`https://openlibrary.org/works/${activeId}.json`,
-				{
-					method: 'GET',
-					headers: {
-						accept: 'application/json',
-					},
+			// 1. Простейшая проверка: если слага нет, возвращаем null (не undefined!)
+			if (!activeSlug) return null
+
+			const isIsbn = /^\d{10,13}$/.test(activeSlug)
+
+			try {
+				if (isIsbn) {
+					const response = await fetch(
+						`https://openlibrary.org/api/books?bibkeys=ISBN:${activeSlug}&format=json&jscmd=data`
+					)
+					const data = await response.json()
+					const bookData = data[`ISBN:${activeSlug}`] || null
+
+					if (bookData && typeof setBookDetails === 'function') {
+						setBookDetails(bookData)
+					}
+					return bookData
+				} else {
+					// Поиск по текстовому слагу (напр. "warcraft-beyond-the-dark-portal-2008")
+					const query = activeSlug.replace(/-/g, ' ')
+					const searchResponse = await fetch(
+						`https://openlibrary.org/search.json?q=${encodeURIComponent(
+							query
+						)}&limit=1`
+					)
+					const searchData = await searchResponse.json()
+
+					if (!searchData.docs?.length) return null
+
+					const bookKey =
+						searchData.docs[0].seed?.[0]?.replace('/books/', '') ||
+						searchData.docs[0].key.replace('/works/', '')
+
+					const detailsResponse = await fetch(
+						`https://openlibrary.org/api/books?bibkeys=OLID:${bookKey}&format=json&jscmd=data`
+					)
+					const detailsData = await detailsResponse.json()
+					const bookData = detailsData[`OLID:${bookKey}`] || null
+
+					if (bookData && typeof setBookDetails === 'function') {
+						setBookDetails(bookData)
+					}
+					return bookData
 				}
-			)
-
-			if (!response.ok) {
-				const errorData = await response.json()
-				console.error('OpenLibrary Error:', errorData)
-				throw new Error('Ошибка получения данных от OpenLibrary')
+			} catch (error) {
+				console.error('Error fetching book:', error)
+				return null
 			}
-
-			const data: OpenLibraryBookDetails = await response.json()
-			if (typeof setBookDetails === 'function') {
-				setBookDetails(data)
-			}
-
-			return data
 		},
-
-		enabled: Boolean(activeType === 'book'),
+		enabled: Boolean(activeType === 'book' && activeSlug),
 		retry: false,
 	})
 	return {
