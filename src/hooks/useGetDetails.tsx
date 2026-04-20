@@ -41,13 +41,7 @@ export function useGetDetails() {
 	) => {
 		event.preventDefault()
 		event.stopPropagation()
-		console.log(
-			'Fetching details for:',
-			activeSlug,
-			'with token length:',
-			process.env.NEXT_PUBLIC_TMDB_TOKEN?.length,
-			process.env.NEXT_PUBLIC_RAW_API?.length
-		)
+
 		setTmdbDetails(null)
 		if (typeof setGameDetails === 'function') {
 			setGameDetails(null)
@@ -78,12 +72,7 @@ export function useGetDetails() {
 					},
 				}
 			)
-			console.log(
-				'Fetching details for:',
-				activeSlug,
-				'with token length:',
-				process.env.NEXT_PUBLIC_TMDB_TOKEN?.length
-			)
+
 			if (!response.ok) {
 				const errorData = await response.json()
 				console.error('TMDB Error:', errorData)
@@ -112,12 +101,7 @@ export function useGetDetails() {
 					},
 				}
 			)
-			console.log(
-				'Fetching details for:',
-				activeSlug,
-				'with token length:',
-				process.env.NEXT_PUBLIC_RAW_API?.length
-			)
+
 			if (!response.ok) {
 				const errorData = await response.json()
 				console.error('RAWG Error:', errorData)

@@ -1,8 +1,6 @@
 'use client'
 
 import { useGetDetails } from '@/hooks/useGetDetails'
-import { CircleArrowLeft } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import ReactFlow, { Background, Controls } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { AISearch } from './AISeach'
@@ -30,10 +28,7 @@ export default function FlowCanvas() {
 		bookDetails,
 		selectedMedia,
 	} = useGetDetails()
-	const router = useRouter()
-	const getBack = () => {
-		router.back()
-	}
+
 	if (isLoading) {
 		return <CanvasLoader />
 	}
@@ -54,12 +49,7 @@ export default function FlowCanvas() {
 			>
 				<AISearch onSearch={generateRoadmap} />
 			</div>
-			<div
-				className='absolute cursor-pointer top-7 text-(--activeColor) left-7 z-2'
-				onClick={getBack}
-			>
-				<CircleArrowLeft size={38} />
-			</div>
+
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}
