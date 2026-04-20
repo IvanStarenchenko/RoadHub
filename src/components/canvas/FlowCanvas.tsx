@@ -1,9 +1,10 @@
 'use client'
 
+import { useGetDetails } from '@/hooks/useGetDetails'
+import { CircleArrowLeft } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import ReactFlow, { Background, Controls } from 'reactflow'
 import 'reactflow/dist/style.css'
-
-import { useGetDetails } from '@/hooks/useGetDetails'
 import { AISearch } from './AISeach'
 import { CanvasLoader } from './CanvasLoader'
 import { DetailsCard } from './Details/DetailsCard'
@@ -29,7 +30,10 @@ export default function FlowCanvas() {
 		bookDetails,
 		selectedMedia,
 	} = useGetDetails()
-
+	const router = useRouter()
+	const getBack = () => {
+		router.back()
+	}
 	if (isLoading) {
 		return <CanvasLoader />
 	}
@@ -50,7 +54,12 @@ export default function FlowCanvas() {
 			>
 				<AISearch onSearch={generateRoadmap} />
 			</div>
-
+			<div
+				className='absolute cursor-pointer top-7 text-(--activeColor) left-7 z-2'
+				onClick={getBack}
+			>
+				<CircleArrowLeft size={38} />
+			</div>
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}
@@ -62,7 +71,6 @@ export default function FlowCanvas() {
 				<Background />
 				<Controls />
 			</ReactFlow>
-
 			{(tmdbDetails || gameDetails || bookDetails) && (
 				<div className='absolute top-0 right-0 h-full w-full max-w-[33%] z-50 p-4 pointer-events-none animate-in fade-in slide-in-from-right-5 duration-300'>
 					<div className='pointer-events-auto h-full rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)] bg-[#1a1c23]/95 backdrop-blur-xl flex flex-col'>
