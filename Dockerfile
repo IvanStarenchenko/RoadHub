@@ -28,7 +28,6 @@
     
     RUN npm install cheerio
     
-    # Прописываем переменные окружения для процесса сборки
     ENV NODE_ENV=production \
         NEXT_TELEMETRY_DISABLED=1 \
         BASE_URL=https://tymurmustafaiev.github.io/roadhub \
@@ -49,7 +48,6 @@
         BASE_URL=https://tymurmustafaiev.github.io/roadhub \
         NODE_OPTIONS="--dns-result-order=ipv4first"
     
-    # Повторно прописываем ENV для рантайма (если серверу нужны эти ключи)
     ARG GOOGLE_GENERATIVE_AI_API_KEY
     ARG NEXT_PUBLIC_TMDB_TOKEN
     ARG NEXT_PUBLIC_RAWG_API
