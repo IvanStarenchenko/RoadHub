@@ -31,5 +31,5 @@ jobs:
             NEXT_PUBLIC_TMDB_TOKEN=${{ secrets.NEXT_PUBLIC_TMDB_TOKEN }}
             NEXT_PUBLIC_RAWG_API=${{ secrets.NEXT_PUBLIC_RAWG_API }}
           tags: |
-            tymurmustafaiev/roadhub:latest
-            tymurmustafaiev/roadhub:${{ github.sha }}
+            tymurmustafaiev/roadhub-frontend:latest
+            tymurmustafaiev/roadhub-frontend:${{ github.sha }}

@@ -5,7 +5,6 @@
     
     # ---------- Этап 2: Dependencies ----------
     FROM base AS deps
-    WORKDIR /app
     COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
     RUN \
       if [ -f package-lock.json ]; then npm ci; \
@@ -17,20 +16,16 @@
     # ---------- Этап 3: Builder ----------
     FROM base AS builder
     WORKDIR /app
+    COPY --from=deps /app/node_modules ./node_modules
+    COPY . .
     
-    # Объявляем аргументы сборки (они придут из GitHub Actions)
+    # Аргументы обязательны именно здесь (для сборки фронтенда)
     ARG GOOGLE_GENERATIVE_AI_API_KEY
     ARG NEXT_PUBLIC_TMDB_TOKEN
     ARG NEXT_PUBLIC_RAWG_API
     
-    COPY --from=deps /app/node_modules ./node_modules
-    COPY . .
-    
-    RUN npm install cheerio
-    
     ENV NODE_ENV=production \
         NEXT_TELEMETRY_DISABLED=1 \
-        BASE_URL=https://tymurmustafaiev.github.io/roadhub \
         GOOGLE_GENERATIVE_AI_API_KEY=$GOOGLE_GENERATIVE_AI_API_KEY \
         NEXT_PUBLIC_TMDB_TOKEN=$NEXT_PUBLIC_TMDB_TOKEN \
         NEXT_PUBLIC_RAWG_API=$NEXT_PUBLIC_RAWG_API
@@ -44,10 +39,9 @@
     ENV NODE_ENV=production \
         NEXT_TELEMETRY_DISABLED=1 \
         PORT=3000 \
-        HOSTNAME="0.0.0.0" \
-        BASE_URL=https://tymurmustafaiev.github.io/roadhub \
-        NODE_OPTIONS="--dns-result-order=ipv4first"
+        HOSTNAME="0.0.0.0"
     
+    # Если эти ключи нужны серверной части (API роутам) во время работы
     ARG GOOGLE_GENERATIVE_AI_API_KEY
     ARG NEXT_PUBLIC_TMDB_TOKEN
     ARG NEXT_PUBLIC_RAWG_API
@@ -58,9 +52,8 @@
     RUN addgroup --system --gid 1001 nodejs && \
         adduser --system --uid 1001 nextjs
     
+    # Копируем только необходимое для standalone режима
     COPY --from=builder /app/public ./public
-    RUN mkdir .next && chown nextjs:nodejs .next
-    
     COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
     COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
     
