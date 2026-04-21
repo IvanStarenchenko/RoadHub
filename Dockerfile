@@ -5,6 +5,7 @@
     
     # ---------- Этап 2: Dependencies ----------
     FROM base AS deps
+    WORKDIR /app
     COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
     RUN \
       if [ -f package-lock.json ]; then npm ci; \
@@ -19,7 +20,9 @@
     COPY --from=deps /app/node_modules ./node_modules
     COPY . .
     
-    # Аргументы обязательны именно здесь (для сборки фронтенда)
+    # Если cheerio нет в package.json, раскомментируй строку ниже:
+    # RUN npm install cheerio
+    
     ARG GOOGLE_GENERATIVE_AI_API_KEY
     ARG NEXT_PUBLIC_TMDB_TOKEN
     ARG NEXT_PUBLIC_RAWG_API
@@ -41,10 +44,10 @@
         PORT=3000 \
         HOSTNAME="0.0.0.0"
     
-    # Если эти ключи нужны серверной части (API роутам) во время работы
     ARG GOOGLE_GENERATIVE_AI_API_KEY
     ARG NEXT_PUBLIC_TMDB_TOKEN
     ARG NEXT_PUBLIC_RAWG_API
+    
     ENV GOOGLE_GENERATIVE_AI_API_KEY=$GOOGLE_GENERATIVE_AI_API_KEY \
         NEXT_PUBLIC_TMDB_TOKEN=$NEXT_PUBLIC_TMDB_TOKEN \
         NEXT_PUBLIC_RAWG_API=$NEXT_PUBLIC_RAWG_API
@@ -52,7 +55,6 @@
     RUN addgroup --system --gid 1001 nodejs && \
         adduser --system --uid 1001 nextjs
     
-    # Копируем только необходимое для standalone режима
     COPY --from=builder /app/public ./public
     COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
     COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
