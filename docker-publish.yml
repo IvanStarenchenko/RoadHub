@@ -28,7 +28,7 @@ jobs:
           push: true
           build-args: |
             BASE_URL=${{ secrets.BASE_URL }}
-            GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+            NEXT_GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.NEXT_GOOGLE_GENERATIVE_AI_API_KEY }}
             NEXT_PUBLIC_TMDB_TOKEN=${{ secrets.NEXT_PUBLIC_TMDB_TOKEN }}
             NEXT_PUBLIC_RAWG_API=${{ secrets.NEXT_PUBLIC_RAWG_API }}
           tags: |

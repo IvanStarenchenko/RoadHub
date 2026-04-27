@@ -4,14 +4,14 @@ import { generateObject } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { roadmapSchema } from './schema'
 const google = createGoogleGenerativeAI({
-	apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+	apiKey: process.env.NEXT_GOOGLE_GENERATIVE_AI_API_KEY,
 })
 
 export async function POST(req: Request) {
 	try {
 		const { prompt } = await req.json()
 
-		if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+		if (!process.env.NEXT_GOOGLE_GENERATIVE_AI_API_KEY) {
 			return new Response(JSON.stringify({ error: 'API Key missing' }), {
 				status: 500,
 			})
